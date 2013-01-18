@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd" version="3.0">
+	<name>bennu-vaadin</name>
+
+	<ordering>
+		<after>
+			<!-- [START OF BENNU GENERATED FRAGMENT] -->
+			<!-- [END OF BENNU GENERATED FRAGMENT] -->
+		</after>
+		<before>
+			<others />
+		</before>
+	</ordering>
+
+	<context-param>
+		<description>Vaadin production mode</description>
+		<param-name>productionMode</param-name>
+		<param-value>false</param-value>
+	</context-param>
+
+	<servlet>
+		<servlet-name>Bennu Vaadin Servlet</servlet-name>
+		<servlet-class>pt.ist.bennu.vaadin.BennuVaadinServlet</servlet-class>
+		<init-param>
+			<description>Bennu Vaadin UI</description>
+			<param-name>UI</param-name>
+			<param-value>pt.ist.bennu.vaadin.BennuVaadinUI</param-value>
+		</init-param>
+		<init-param>
+			<param-name>Resources</param-name>
+			<param-value>/example</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Bennu Vaadin Servlet</servlet-name>
+		<url-pattern>/vaadin/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Bennu Vaadin Servlet</servlet-name>
+		<url-pattern>/VAADIN/*</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-fragment>

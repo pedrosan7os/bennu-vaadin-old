@@ -52,9 +52,8 @@ public class VaadinViewAnnotationInitializer implements ServletContainerInitiali
 	private void extractApp(Map<Class<?>, ApplicationInfo> apps, Class<?> app) {
 		Application application = app.getAnnotation(Application.class);
 		if (application != null) {
-			apps.put(app,
-					new ApplicationInfo(application.bundle(), application.title(), application.description(), application.path(),
-							application.group()));
+			apps.put(app, new ApplicationInfo(application.bundle(), application.title(), application.description(), "vaadin#"
+					+ application.path(), application.group()));
 			views.put(application.path(), (Class<? extends View>) app);
 		} else {
 			throw new Error();

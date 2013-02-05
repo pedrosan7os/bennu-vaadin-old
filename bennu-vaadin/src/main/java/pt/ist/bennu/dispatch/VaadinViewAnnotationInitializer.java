@@ -20,62 +20,62 @@ import com.vaadin.navigator.ViewChangeListener;
 
 @HandlesTypes({ Functionality.class })
 public class VaadinViewAnnotationInitializer implements ServletContainerInitializer {
-	private static Map<String, Class<? extends View>> views = new HashMap<>();
+    private static Map<String, Class<? extends View>> views = new HashMap<>();
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public void onStartup(Set<Class<?>> classes, ServletContext context) throws ServletException {
-		if (classes != null) {
-			Map<Class<?>, ApplicationInfo> apps = new HashMap<>();
-			for (Class<?> type : classes) {
-				Functionality functionality = type.getAnnotation(Functionality.class);
-				extractFunctionality(apps, functionality);
-				views.put(functionality.app().getAnnotation(Application.class).path() + "/" + functionality.path(),
-						(Class<? extends View>) type);
-			}
-			for (ApplicationInfo application : apps.values()) {
-				AppServer.registerApp(application);
-			}
-		}
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public void onStartup(Set<Class<?>> classes, ServletContext context) throws ServletException {
+        if (classes != null) {
+            Map<Class<?>, ApplicationInfo> apps = new HashMap<>();
+            for (Class<?> type : classes) {
+                Functionality functionality = type.getAnnotation(Functionality.class);
+                extractFunctionality(apps, functionality);
+                views.put(functionality.app().getAnnotation(Application.class).path() + "/" + functionality.path(),
+                        (Class<? extends View>) type);
+            }
+            for (ApplicationInfo application : apps.values()) {
+                AppServer.registerApp(application);
+            }
+        }
+    }
 
-	public void extractFunctionality(Map<Class<?>, ApplicationInfo> apps, Functionality functionality) {
-		if (!apps.containsKey(functionality.app())) {
-			extractApp(apps, functionality.app());
-		}
-		apps.get(functionality.app()).addFunctionality(
-				new FunctionalityInfo(functionality.bundle(), functionality.title(), functionality.description(), functionality
-						.path(), functionality.group()));
-	}
+    public void extractFunctionality(Map<Class<?>, ApplicationInfo> apps, Functionality functionality) {
+        if (!apps.containsKey(functionality.app())) {
+            extractApp(apps, functionality.app());
+        }
+        apps.get(functionality.app()).addFunctionality(
+                new FunctionalityInfo(functionality.bundle(), functionality.title(), functionality.description(), functionality
+                        .path(), functionality.group()));
+    }
 
-	@SuppressWarnings("unchecked")
-	private void extractApp(Map<Class<?>, ApplicationInfo> apps, Class<?> app) {
-		Application application = app.getAnnotation(Application.class);
-		if (application != null) {
-			apps.put(app, new ApplicationInfo(application.bundle(), application.title(), application.description(), "vaadin#"
-					+ application.path(), application.group()));
-			views.put(application.path(), (Class<? extends View>) app);
-		} else {
-			throw new Error();
-		}
-	}
+    @SuppressWarnings("unchecked")
+    private void extractApp(Map<Class<?>, ApplicationInfo> apps, Class<?> app) {
+        Application application = app.getAnnotation(Application.class);
+        if (application != null) {
+            apps.put(app, new ApplicationInfo(application.bundle(), application.title(), application.description(), "vaadin#"
+                    + application.path(), application.group()));
+            views.put(application.path(), (Class<? extends View>) app);
+        } else {
+            throw new Error();
+        }
+    }
 
-	public static void initializeNavigator(Navigator navigator) {
-		for (Entry<String, Class<? extends View>> view : views.entrySet()) {
-			navigator.addView(view.getKey(), view.getValue());
-		}
-		navigator.addViewChangeListener(new ViewChangeListener() {
-			@Override
-			public boolean beforeViewChange(ViewChangeEvent event) {
-				if (event.getNewView() instanceof BennuVaadinView) {
-					return ((BennuVaadinView) event.getNewView()).isAllowed();
-				}
-				return true;
-			}
+    public static void initializeNavigator(Navigator navigator) {
+        for (Entry<String, Class<? extends View>> view : views.entrySet()) {
+            navigator.addView(view.getKey(), view.getValue());
+        }
+        navigator.addViewChangeListener(new ViewChangeListener() {
+            @Override
+            public boolean beforeViewChange(ViewChangeEvent event) {
+                if (event.getNewView() instanceof BennuVaadinView) {
+                    return ((BennuVaadinView) event.getNewView()).isAllowed();
+                }
+                return true;
+            }
 
-			@Override
-			public void afterViewChange(ViewChangeEvent event) {
-			}
-		});
-	}
+            @Override
+            public void afterViewChange(ViewChangeEvent event) {
+            }
+        });
+    }
 }

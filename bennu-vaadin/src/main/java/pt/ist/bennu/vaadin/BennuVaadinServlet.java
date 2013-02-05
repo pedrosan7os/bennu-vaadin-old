@@ -11,33 +11,33 @@ import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.VaadinServlet;
 
 public class BennuVaadinServlet extends VaadinServlet {
-	private static class PortalBoostrapListener implements BootstrapListener {
-		@Override
-		public void modifyBootstrapPage(BootstrapPageResponse response) {
-			// response.getDocument()
-			// .body()
-			// .prepend(
-			// "<a href=\"#example/hello/manel\">cenas</a>"
-			// + "<script type=\"text/javascript\" src=\"js/jquery-1.8.3.min.js\"></script>"
-			// + "<script type=\"text/javascript\" src=\"js/jquery.ba-bbq.min.js\"></script>"
-			// + "<script type=\"text/javascript\" src=\"js/portal-0.0.1.js\"></script>");
-		}
+    private static class PortalBoostrapListener implements BootstrapListener {
+        @Override
+        public void modifyBootstrapPage(BootstrapPageResponse response) {
+            // response.getDocument()
+            // .body()
+            // .prepend(
+            // "<a href=\"#example/hello/manel\">cenas</a>"
+            // + "<script type=\"text/javascript\" src=\"js/jquery-1.8.3.min.js\"></script>"
+            // + "<script type=\"text/javascript\" src=\"js/jquery.ba-bbq.min.js\"></script>"
+            // + "<script type=\"text/javascript\" src=\"js/portal-0.0.1.js\"></script>");
+        }
 
-		@Override
-		public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
-		}
-	}
+        @Override
+        public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
+        }
+    }
 
-	private static BootstrapListener listener = new PortalBoostrapListener();
+    private static BootstrapListener listener = new PortalBoostrapListener();
 
-	@Override
-	protected void servletInitialized() throws ServletException {
-		super.servletInitialized();
-		getService().addSessionInitListener(new SessionInitListener() {
-			@Override
-			public void sessionInit(SessionInitEvent event) throws ServiceException {
-				event.getSession().addBootstrapListener(listener);
-			}
-		});
-	}
+    @Override
+    protected void servletInitialized() throws ServletException {
+        super.servletInitialized();
+        getService().addSessionInitListener(new SessionInitListener() {
+            @Override
+            public void sessionInit(SessionInitEvent event) throws ServiceException {
+                event.getSession().addBootstrapListener(listener);
+            }
+        });
+    }
 }

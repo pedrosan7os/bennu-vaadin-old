@@ -17,7 +17,7 @@
 
 	<properties>
 		<version.pt.ist.bennu.bennu-core>2.0-SNAPSHOT</version.pt.ist.bennu.bennu-core>
-		<version.com.vaadin.vaadin>7.0.0.beta11</version.com.vaadin.vaadin>
+		<version.com.vaadin.vaadin>7.0.0</version.com.vaadin.vaadin>
 	</properties>
 
 	<dependencies>

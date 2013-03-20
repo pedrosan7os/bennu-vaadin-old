@@ -30,9 +30,11 @@ public class VaadinViewAnnotationInitializer implements ServletContainerInitiali
             Map<Class<?>, ApplicationInfo> apps = new HashMap<>();
             for (Class<?> type : classes) {
                 Functionality functionality = type.getAnnotation(Functionality.class);
-                extractFunctionality(apps, functionality);
-                views.put(functionality.app().getAnnotation(Application.class).path() + "/" + functionality.path(),
-                        (Class<? extends View>) type);
+                if (functionality != null && View.class.isAssignableFrom(type)) {
+                    extractFunctionality(apps, functionality);
+                    views.put(functionality.app().getAnnotation(Application.class).path() + "/" + functionality.path(),
+                            (Class<? extends View>) type);
+                }
             }
             for (ApplicationInfo application : apps.values()) {
                 AppServer.registerApp(application);
@@ -44,9 +46,10 @@ public class VaadinViewAnnotationInitializer implements ServletContainerInitiali
         if (!apps.containsKey(functionality.app())) {
             extractApp(apps, functionality.app());
         }
-        apps.get(functionality.app()).addFunctionality(
-                new FunctionalityInfo(functionality.path(), functionality.group(), new BundleDetails(functionality.bundle(),
-                        functionality.title(), functionality.description())));
+        final ApplicationInfo applicationInfo = apps.get(functionality.app());
+        final String path = applicationInfo.getPath() + "/" + functionality.path();
+        applicationInfo.addFunctionality(new FunctionalityInfo(path, functionality.group(), new BundleDetails(functionality
+                .bundle(), functionality.title(), functionality.description())));
     }
 
     @SuppressWarnings("unchecked")

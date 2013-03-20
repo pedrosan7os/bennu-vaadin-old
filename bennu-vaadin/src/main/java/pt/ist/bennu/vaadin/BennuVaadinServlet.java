@@ -12,6 +12,8 @@ import com.vaadin.server.VaadinServlet;
 
 public class BennuVaadinServlet extends VaadinServlet {
     private static class PortalBoostrapListener implements BootstrapListener {
+        private static final String PORTAL_JS = "<script type=\"text/javascript\" src=\"bennu-portal/portal.js\"></script>";
+
         @Override
         public void modifyBootstrapPage(BootstrapPageResponse response) {
             // response.getDocument()
@@ -21,6 +23,7 @@ public class BennuVaadinServlet extends VaadinServlet {
             // + "<script type=\"text/javascript\" src=\"js/jquery-1.8.3.min.js\"></script>"
             // + "<script type=\"text/javascript\" src=\"js/jquery.ba-bbq.min.js\"></script>"
             // + "<script type=\"text/javascript\" src=\"js/portal-0.0.1.js\"></script>");
+            response.getDocument().head().append(PORTAL_JS);
         }
 
         @Override

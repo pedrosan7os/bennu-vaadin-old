@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.HandlesTypes;
 
 import pt.ist.bennu.dispatch.model.ApplicationInfo;
+import pt.ist.bennu.dispatch.model.BundleDetails;
 import pt.ist.bennu.dispatch.model.FunctionalityInfo;
 import pt.ist.bennu.vaadin.BennuVaadinView;
 
@@ -44,16 +45,18 @@ public class VaadinViewAnnotationInitializer implements ServletContainerInitiali
             extractApp(apps, functionality.app());
         }
         apps.get(functionality.app()).addFunctionality(
-                new FunctionalityInfo(functionality.bundle(), functionality.title(), functionality.description(), functionality
-                        .path(), functionality.group()));
+                new FunctionalityInfo(functionality.path(), functionality.group(), new BundleDetails(functionality.bundle(),
+                        functionality.title(), functionality.description())));
     }
 
     @SuppressWarnings("unchecked")
     private void extractApp(Map<Class<?>, ApplicationInfo> apps, Class<?> app) {
         Application application = app.getAnnotation(Application.class);
         if (application != null) {
-            apps.put(app, new ApplicationInfo(application.bundle(), application.title(), application.description(), "vaadin#"
-                    + application.path(), application.group()));
+            apps.put(
+                    app,
+                    new ApplicationInfo("vaadin#" + application.path(), application.group(), new BundleDetails(application
+                            .bundle(), application.title(), application.description())));
             views.put(application.path(), (Class<? extends View>) app);
         } else {
             throw new Error();

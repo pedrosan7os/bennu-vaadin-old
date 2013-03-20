@@ -27,10 +27,6 @@
 			<param-name>UI</param-name>
 			<param-value>pt.ist.bennu.vaadin.BennuVaadinUI</param-value>
 		</init-param>
-		<init-param>
-			<param-name>Resources</param-name>
-			<param-value>/example</param-value>
-		</init-param>
 	</servlet>
 
 	<servlet-mapping>

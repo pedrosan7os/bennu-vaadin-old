@@ -5,8 +5,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import pt.ist.bennu.core.domain.groups.PersistentGroup;
-import pt.ist.bennu.core.security.UserView;
+import pt.ist.bennu.core.domain.groups.BennuGroup;
+import pt.ist.bennu.core.security.Authenticate;
+import pt.ist.bennu.dispatch.Application;
 import pt.ist.bennu.dispatch.Functionality;
 import pt.ist.bennu.vaadin.annotation.VaadinViewInitializer;
 
@@ -39,7 +40,7 @@ public abstract class BennuVaadinView extends CustomComponent implements View {
     public boolean isAllowed() {
         Functionality view = getClass().getAnnotation(Functionality.class);
         if (view != null) {
-            return PersistentGroup.parse(view.group()).isMember(UserView.getUser());
+            return BennuGroup.parse(view.group()).isMember(Authenticate.getUser());
         }
         return true;
     }
@@ -55,7 +56,26 @@ public abstract class BennuVaadinView extends CustomComponent implements View {
     }
 
     public static Link link(String title, Class<? extends View> view, String... args) {
-        return new Link(title, new ExternalResource("#!" + view.getAnnotation(Functionality.class).path() + "/"
-                + Joiner.on('/').join(args)));
+        Functionality functionality = view.getAnnotation(Functionality.class);
+        String path = null;
+        if (functionality != null) {
+            Application application = functionality.app().getAnnotation(Application.class);
+            if (application != null) {
+                path = application.path() + "/" + functionality.path();
+            }
+        } else {
+            Application application = view.getAnnotation(Application.class);
+            if (application != null) {
+                path = application.path();
+            }
+        }
+        if (path == null) {
+            throw new Error("Bad view configuration, must annotate with @Functionality or @Application");
+        }
+
+        if (args != null) {
+            path = path + "/" + Joiner.on('/').join(args);
+        }
+        return new Link(title, new ExternalResource("#!" + path));
     }
 }

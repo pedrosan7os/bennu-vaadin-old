@@ -1,6 +1,10 @@
 package pt.ist.bennu.vaadin;
 
+import java.util.Collections;
+
 import javax.servlet.ServletException;
+
+import org.jsoup.nodes.Element;
 
 import com.vaadin.server.BootstrapFragmentResponse;
 import com.vaadin.server.BootstrapListener;
@@ -11,31 +15,41 @@ import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.VaadinServlet;
 
 public class BennuVaadinServlet extends VaadinServlet {
+    private BootstrapListener listener;
+
     private static class PortalBoostrapListener implements BootstrapListener {
-        private static final String PORTAL_JS = "<script type=\"text/javascript\" src=\"bennu-portal/portal.js\"></script>";
+        private static final String[] JS = new String[] { "/js/libs/jquery/jquery.js",
+                "/js/libs/mustache/mustache-min.js", "/bennu-portal/portal.js" };
+
+        private static final String JS_FORMAT = "<script type=\"text/javascript\" src=\"%s\"></script>";
+        private static final String LINK_FORMAT = "<link rel=\"stylesheet/less\" href=\"%s\" />";
+
+        private final String contextPath;
+
+        public PortalBoostrapListener(String contextPath) {
+            this.contextPath = contextPath;
+        }
 
         @Override
         public void modifyBootstrapPage(BootstrapPageResponse response) {
-            // response.getDocument()
-            // .body()
-            // .prepend(
-            // "<a href=\"#example/hello/manel\">cenas</a>"
-            // + "<script type=\"text/javascript\" src=\"js/jquery-1.8.3.min.js\"></script>"
-            // + "<script type=\"text/javascript\" src=\"js/jquery.ba-bbq.min.js\"></script>"
-            // + "<script type=\"text/javascript\" src=\"js/portal-0.0.1.js\"></script>");
-            response.getDocument().head().append(PORTAL_JS);
+            final Element head = response.getDocument().head();
+
+            for (String js : JS) {
+                head.append(String.format(JS_FORMAT, contextPath + js));
+            }
+            response.getDocument().body().classNames(Collections.EMPTY_SET);
         }
 
         @Override
         public void modifyBootstrapFragment(BootstrapFragmentResponse response) {
         }
-    }
 
-    private static BootstrapListener listener = new PortalBoostrapListener();
+    }
 
     @Override
     protected void servletInitialized() throws ServletException {
         super.servletInitialized();
+        listener = new PortalBoostrapListener(getServletContext().getContextPath());
         getService().addSessionInitListener(new SessionInitListener() {
             @Override
             public void sessionInit(SessionInitEvent event) throws ServiceException {

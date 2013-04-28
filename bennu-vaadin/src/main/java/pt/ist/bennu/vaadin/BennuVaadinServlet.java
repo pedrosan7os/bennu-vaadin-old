@@ -19,7 +19,7 @@ public class BennuVaadinServlet extends VaadinServlet {
 
     private static class PortalBoostrapListener implements BootstrapListener {
         private static final String[] JS = new String[] { "/js/libs/jquery/jquery.js",
-                "/js/libs/mustache/mustache-min.js", "/bennu-portal/portal.js" };
+                "/js/libs/mustache/mustache.js", "/bennu-portal/portal.js" };
 
         private static final String JS_FORMAT = "<script type=\"text/javascript\" src=\"%s\"></script>";
         private static final String LINK_FORMAT = "<link rel=\"stylesheet/less\" href=\"%s\" />";
